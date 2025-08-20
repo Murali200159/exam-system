@@ -1,14 +1,23 @@
-const express = require('express');
-const cors = require('cors');
-const authRoutes = require('./routes/authRoutes');
-const examRoutes = require('./routes/examRoutes');
-
+const express = require("express");
 const app = express();
 
-app.use(cors());
+// ✅ Import auth routes (ensure path is correct)
+const authRoutes = require("./routes/authRoutes");
+
+// ✅ Middleware to parse JSON bodies
 app.use(express.json());
 
-app.use('/api/auth', authRoutes);
-app.use('/api/exam', examRoutes);
+// ✅ Root route — test if server is running
+app.get("/", (req, res) => {
+  res.json({ message: "✅ Server is running!" });
+});
+
+// ✅ Use auth routes under /api/auth
+app.use("/api/auth", authRoutes);
+
+// ✅ 404 handler — catch all unmatched routes
+app.use((req, res) => {
+  res.status(404).json({ message: "Route not found" });
+});
 
 module.exports = app;
